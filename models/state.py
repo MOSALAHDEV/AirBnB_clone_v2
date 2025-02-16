@@ -2,6 +2,7 @@
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
 from os import getenv
+import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 import models
@@ -12,9 +13,7 @@ class State(BaseModel, Base):
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
-        cities = relationship(
-            "City", backref="states",cascade="all, delete-orphan"
-            )
+        cities = relationship("City", backref="states",cascade="all, delete-orphan")
     else:
         name = ""
 

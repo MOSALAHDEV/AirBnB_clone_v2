@@ -33,9 +33,9 @@ class DBStorage:
     __session = None
     def __init__(self):
         """ Initializes DBStorage """
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-        .format(user, password, host, database),
-        pool_pre_ping=True)
+        self.__engine = create_engine(
+                'mysql+mysqldb://{}:{}@{}/{}'.format(user, password, host, database), pool_pre_ping=True
+                )
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
         
