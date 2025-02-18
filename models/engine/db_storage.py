@@ -27,6 +27,7 @@ class DBStorage:
     """ DBStorage class """
     __engine = None
     __session = None
+
     def __init__(self):
         """ Initializes DBStorage """
         user = getenv('HBNB_MYSQL_USER')
@@ -36,7 +37,6 @@ class DBStorage:
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(user, password, host, database), pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
-        self.reload()
         
     def all(self, cls=None):
         """ Returns a dictionary of models currently in storage """
@@ -74,4 +74,13 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(session_factory)
-
+    
+    def count(self, cls=None):
+        """ Counts objects in storage """
+        if cls is None:
+            count = 0
+            for c in classes.values():
+                count += self.__session.query(c).count()
+        else:
+            count = self.__session.query(cls).count()
+        return count
