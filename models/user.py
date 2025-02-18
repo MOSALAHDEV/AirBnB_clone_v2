@@ -7,12 +7,13 @@ import models
 from models.review import Review
 from os import getenv
 import sqlalchemy
+import hashlib
 
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
-    __tablename__ = 'users'
     if getenv('HBNB_TYPE_STORAGE') == 'db':
+        __tablename__ = 'users'
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
@@ -28,3 +29,13 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializing user from base model"""
         super().__init__(*args, **kwargs)
+
+    @property
+    def password(self):
+        """password getter"""
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        """password setter"""
+        self._password = value

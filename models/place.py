@@ -19,7 +19,7 @@ class Place(BaseModel, Base):
         number_rooms = Column(Integer, nullable=False, default=0)
         number_bathrooms = Column(Integer, nullable=False, default=0)
         max_guest = Column(Integer, nullable=False, default=0)
-        place_by_night = Column(Integer, nullable=False, default=0)
+        price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
         reviews = relationship("Review", backref="place", cascade="all, delete-orphan")
@@ -59,7 +59,7 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
         @property
         def amenities(self):
             """returns the list of Amenity instances"""
-            amenities = models.storage.all("Amenity").values
+            amenities = models.storage.all("Amenity").values()
             amenity_list = []
             for amenity in amenities:
                 if amenity.place_id == self.id:
