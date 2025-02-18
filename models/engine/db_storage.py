@@ -2,10 +2,8 @@
 """ This file is db storage for hbnb clone """
 from models.base_model import BaseModel, Base
 from os import getenv
-import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-import models
 from models.user import User
 from models.state import State
 from models.city import City
@@ -37,10 +35,10 @@ class DBStorage:
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(user, password, host, database), pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
-        
+        self.reload()
+
     def all(self, cls=None):
         """ Returns a dictionary of models currently in storage """
-        self.reload()
         new_dict = {}
         if cls is None:
                 for c in classes.values():
@@ -73,14 +71,4 @@ class DBStorage:
         """ Creates all tables in the database and creates a session """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(session_factory)
-    
-    def count(self, cls=None):
-        """ Counts objects in storage """
-        if cls is None:
-            count = 0
-            for c in classes.values():
-                count += self.__session.query(c).count()
-        else:
-            count = self.__session.query(cls).count()
-        return count
+        self.__session = scoped_session(session_factory)() 
