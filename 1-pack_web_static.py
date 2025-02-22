@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 """This module is a package of the web_static folder"""
 from fabric.api import local
 from datetime import datetime
