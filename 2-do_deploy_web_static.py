@@ -23,7 +23,7 @@ def do_deploy(archive_path):
         run(f'mv {release_path}/web_static/* {release_path}/')
         run(f'rm -rf {release_path}/web_static')
         run('rm -rf /data/web_static/current')
-        run(f'ln -s {release_path}/ /data/web_static/current')
+        run(f'ln -sfn {release_path}/ /data/web_static/current')
         return True
     except:
         return False
