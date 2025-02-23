@@ -2,6 +2,7 @@
 """ Fabric script that distributes an archive to web servers """
 from fabric.api import env, local, run, put
 import os
+from datetime import datetime
 
 
 env.user = 'ubuntu'
@@ -13,9 +14,11 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
     try:
+        form = '%Y-%m-%dT%H:%M:%S.%f'
         filename = os.path.basename(archive_path)
         without_ex = filename.split('.')[0]
-        release_path = f'/data/web_static/releases/{without_ex}'
+        date = datetime.strptime(without_ex, form)
+        release_path = f'/data/web_static/releases/web_static_{date.strftime("%Y%m%d%H%M%S")}'
         put(archive_path, '/tmp/')
         run(f'mkdir -p {release_path}')
         run(f'tar -xzf /tmp/{filename} -C {release_path}')
