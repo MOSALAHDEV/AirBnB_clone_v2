@@ -21,6 +21,7 @@ def do_pack():
     except Exception as e:
         return None
 
+
 def do_deploy(archive_path):
     """ Distributes an archive to web servers """
     if not os.path.exists(archive_path):
@@ -28,7 +29,8 @@ def do_deploy(archive_path):
     try:
         put(archive_path, '/tmp/')
         filename = os.path.basename(archive_path)
-        release_path = f'/data/web_static/releases/web_static_{filename.split(".")[0]}'
+        la = filename.split(".")[0]
+        release_path = f'/data/web_static/releases/web_static_{la}'
         run(f'mkdir -p {release_path}')
         run(f'tar -xzf /tmp/{filename} -C {release_path}')
         run(f'rm /tmp/{filename}')
@@ -37,8 +39,9 @@ def do_deploy(archive_path):
         run(f'rm -rf /data/web_static/current')
         run(f'ln -s {release_path}/ /data/web_static/current')
         return True
-    except:
+    except Exception as e:
         return False
+
 
 def deploy():
     """ Distributes an archive to web servers """
