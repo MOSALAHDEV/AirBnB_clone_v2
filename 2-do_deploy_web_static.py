@@ -19,9 +19,9 @@ def do_deploy(archive_path):
         filename = os.path.basename(archive_path)
         without_ex = filename.split('.')[0]
         date = datetime.strptime(without_ex, form)
+        put(archive_path, '/tmp/')
         release_path = (f'/data/web_static/releases/web_static_'
                         f'{date.strftime("%Y%m%d%H%M%S")}')
-        put(archive_path, '/tmp/')
         run(f'mkdir -p {release_path}')
         run(f'tar -xzf /tmp/{filename} -C {release_path}')
         run(f'rm /tmp/{filename}')
