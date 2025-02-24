@@ -9,6 +9,7 @@ env.user = 'ubuntu'
 env.key_filename = '~/.ssh/school'
 env.hosts = ['100.26.168.254', '44.211.253.220']
 
+
 def do_deploy(archive_path):
     """ Distributes an archive to web servers """
     if not os.path.exists(archive_path):
@@ -18,7 +19,8 @@ def do_deploy(archive_path):
         filename = os.path.basename(archive_path)
         without_ex = filename.split('.')[0]
         date = datetime.strptime(without_ex, form)
-        release_path = f'/data/web_static/releases/web_static_{date.strftime("%Y%m%d%H%M%S")}'
+        release_path = (f'/data/web_static/releases/web_static_'
+                        f'{date.strftime("%Y%m%d%H%M%S")}')
         put(archive_path, '/tmp/')
         run(f'mkdir -p {release_path}')
         run(f'tar -xzf /tmp/{filename} -C {release_path}')
@@ -28,5 +30,5 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run(f'ln -sfn {release_path}/ /data/web_static/current')
         return True
-    except:
+    except Exception as e:
         return False
