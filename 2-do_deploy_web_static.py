@@ -22,6 +22,8 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         release_path = (f'/data/web_static/releases/web_static_'
                         f'{date.strftime("%Y%m%d%H%M%S")}')
+        local('mkdir -p versions')
+        local(f'tar -cvzf {archive_path} web_static')
         run(f'mkdir -p {release_path}')
         run(f'tar -xzf /tmp/{filename} -C {release_path}')
         run(f'rm /tmp/{filename}')
