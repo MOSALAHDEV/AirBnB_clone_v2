@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 """ This file is db storage for hbnb clone """
 from models.base_model import BaseModel, Base
 from os import getenv
