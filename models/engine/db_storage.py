@@ -41,11 +41,11 @@ class DBStorage:
         """ Returns a dictionary of models currently in storage """
         new_dict = {}
         if cls is None:
-                for c in classes.values():
-                    objs = self.__session.query(c).all()
-                    for obj in objs:
-                        key = obj.__class__.__name__ + '.' + obj.id
-                        new_dict[key] = obj
+            for c in classes.values():
+                objs = self.__session.query(c).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
         else:
             if cls in classes.values():
                 objs = self.__session.query(cls).all()
@@ -54,18 +54,19 @@ class DBStorage:
                     new_dict[key] = obj
         return new_dict
 
-    def new(self, cls=None):
+    def new(self, obj):
         """ Adds an object to the current database session """
-        self.__session.add(cls)
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
         """ Commits all changes of the current database session """
         self.__session.commit()
 
-    def delete(self, cls=None):
+    def delete(self, obj=None):
         """ Deletes an object from the current database session """
-        if cls is not None:
-            self.__session.delete(cls)
+        if obj:
+            self.__session.delete(obj)
 
     def reload(self):
         """ Creates all tables in the database and creates a session """
@@ -74,5 +75,5 @@ class DBStorage:
         self.__session = scoped_session(session_factory)()
 
     def close(self):
-        """ remove session """
+        """ Remove session """
         self.__session.remove()

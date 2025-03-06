@@ -26,30 +26,29 @@ class FileStorage:
         if cls is None:
             return self.__objects
         else:
-            return{key: value for key, value in self.__objects.items() if value.__class__ == cls}
+            return {key: value for key, value in self.__objects.items() if isinstance(value, cls)}
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
         key = obj.__class__.__name__ + '.' + obj.id
-        FileStorage.__objects[key] = obj
+        self.__objects[key] = obj
 
     def save(self):
         """Saves storage dictionary to file"""
-        with open(FileStorage.__file_path, 'w') as f:
+        with open(self.__file_path, 'w') as f:
             temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
+            for key, val in self.__objects.items():
                 temp[key] = val.to_dict()
             json.dump(temp, f)
 
     def reload(self):
         """Loads storage dictionary from file"""
         try:
-            with open(FileStorage.__file_path, 'r') as f:
+            with open(self.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
                     class_name = val.get('__class__')
-                    self.all()[key] = classes[class_name](**val)
+                    self.__objects[key] = classes[class_name](**val)
         except FileNotFoundError:
             pass
 
@@ -57,11 +56,10 @@ class FileStorage:
         """Deletes an object from storage"""
         if obj is not None:
             key = obj.__class__.__name__ + '.' + obj.id
-            del FileStorage.__objects[key]
-            self.save()
-        else:
-            pass
+            if key in self.__objects:
+                del self.__objects[key]
+                self.save()
 
     def close(self):
-        """ deserialize to objects"""
+        """Deserialize to objects"""
         self.reload()
