@@ -65,3 +65,7 @@ class FileStorage:
             self.save()
         else:
             pass
+
+    def close(self):
+        """ deserialize to objects"""
+        self.reload()
